@@ -83,89 +83,89 @@ test('users', async (t) => {
     );
   });
 
-  // await t.test(
-  //   'POST /users/:id/unsubscribeFrom => failure; fake params.id',
-  //   async (t) => {
-  //     const responseUnsubscribeFrom = await app.inject({
-  //       url: `/users/fakeId/unsubscribeFrom`,
-  //       method: 'POST',
-  //       payload: {
-  //         userId: 'fakeId',
-  //       },
-  //     });
+  await t.test(
+    'POST /users/:id/unsubscribeFrom => failure; fake params.id',
+    async (t) => {
+      const responseUnsubscribeFrom = await app.inject({
+        url: `/users/fakeId/unsubscribeFrom`,
+        method: 'POST',
+        payload: {
+          userId: 'fakeId',
+        },
+      });
 
-  //     t.ok(responseUnsubscribeFrom.statusCode === 400);
-  //   }
-  // );
+      t.ok(responseUnsubscribeFrom.statusCode === 400);
+    }
+  );
 
-  // await t.test(
-  //   'POST /users/:id/unsubscribeFrom => failure; fake body.userId',
-  //   async (t) => {
-  //     const { body: user1 } = await createUser(app);
+  await t.test(
+    'POST /users/:id/unsubscribeFrom => failure; fake body.userId',
+    async (t) => {
+      const { body: user1 } = await createUser(app);
 
-  //     const responseUnsubscribeFrom = await app.inject({
-  //       url: `/users/${user1.id}/unsubscribeFrom`,
-  //       method: 'POST',
-  //       payload: {
-  //         userId: 'fakeId',
-  //       },
-  //     });
+      const responseUnsubscribeFrom = await app.inject({
+        url: `/users/${user1.id}/unsubscribeFrom`,
+        method: 'POST',
+        payload: {
+          userId: 'fakeId',
+        },
+      });
 
-  //     t.ok(responseUnsubscribeFrom.statusCode === 400);
-  //   }
-  // );
+      t.ok(responseUnsubscribeFrom.statusCode === 400);
+    }
+  );
 
-  // await t.test(
-  //   'POST /users/:id/unsubscribeFrom => failure; body.userId is valid but our user is not following him',
-  //   async (t) => {
-  //     const { body: user1 } = await createUser(app);
-  //     const { body: user2 } = await createUser(app);
+  await t.test(
+    'POST /users/:id/unsubscribeFrom => failure; body.userId is valid but our user is not following him',
+    async (t) => {
+      const { body: user1 } = await createUser(app);
+      const { body: user2 } = await createUser(app);
 
-  //     const responseUnsubscribeFrom = await app.inject({
-  //       url: `/users/${user1.id}/unsubscribeFrom`,
-  //       method: 'POST',
-  //       payload: {
-  //         userId: user2.id,
-  //       },
-  //     });
+      const responseUnsubscribeFrom = await app.inject({
+        url: `/users/${user1.id}/unsubscribeFrom`,
+        method: 'POST',
+        payload: {
+          userId: user2.id,
+        },
+      });
 
-  //     t.ok(responseUnsubscribeFrom.statusCode === 400);
-  //   }
-  // );
+      t.ok(responseUnsubscribeFrom.statusCode === 400);
+    }
+  );
 
-  // await t.test('POST /users/:id/unsubscribeFrom => success', async (t) => {
-  //   const { body: user1 } = await createUser(app);
-  //   const { body: user2 } = await createUser(app);
-  //   const { body: user3 } = await createUser(app);
+  await t.test('POST /users/:id/unsubscribeFrom => success', async (t) => {
+    const { body: user1 } = await createUser(app);
+    const { body: user2 } = await createUser(app);
+    const { body: user3 } = await createUser(app);
 
-  //   await app.inject({
-  //     url: `/users/${user1.id}/subscribeTo`,
-  //     method: 'POST',
-  //     payload: {
-  //       userId: user3.id,
-  //     },
-  //   });
-  //   await app.inject({
-  //     url: `/users/${user2.id}/subscribeTo`,
-  //     method: 'POST',
-  //     payload: {
-  //       userId: user3.id,
-  //     },
-  //   });
-  //   await app.inject({
-  //     url: `/users/${user1.id}/unsubscribeFrom`,
-  //     method: 'POST',
-  //     payload: {
-  //       userId: user3.id,
-  //     },
-  //   });
+    await app.inject({
+      url: `/users/${user1.id}/subscribeTo`,
+      method: 'POST',
+      payload: {
+        userId: user3.id,
+      },
+    });
+    await app.inject({
+      url: `/users/${user2.id}/subscribeTo`,
+      method: 'POST',
+      payload: {
+        userId: user3.id,
+      },
+    });
+    await app.inject({
+      url: `/users/${user1.id}/unsubscribeFrom`,
+      method: 'POST',
+      payload: {
+        userId: user3.id,
+      },
+    });
 
-  //   const { body: receivedUser3 } = await getUser(app, user3.id);
-  //   t.ok(
-  //     receivedUser3.subscribedToUserIds.includes(user2.id) &&
-  //       !receivedUser3.subscribedToUserIds.includes(user1.id)
-  //   );
-  // });
+    const { body: receivedUser3 } = await getUser(app, user3.id);
+    t.ok(
+      receivedUser3.subscribedToUserIds.includes(user2.id) &&
+        !receivedUser3.subscribedToUserIds.includes(user1.id)
+    );
+  });
 
   await t.test('DELETE /users/:id => failure; fake params.id', async (t) => {
     const responseDeleteUser = await app.inject({
