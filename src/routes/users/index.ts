@@ -9,15 +9,6 @@ import type { UserEntity } from '../../utils/DB/entities/DBUsers';
 import { HttpError } from '@fastify/sensible/lib/httpError';
 import { isValidUuid } from '../helper';
 
-// const errorsThrower = (category: string) => {
-//   notFound: () => {
-//     throw fastify.httpErrors.createError(404, 'This user does not exist!');
-//   };
-//   inValid: () => {
-//     throw fastify.httpErrors.createError(400, 'This id does not correct');
-//   };
-// };
-
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
 ): Promise<void> => {
@@ -76,6 +67,23 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       if (!isValidUuid(id)) {
         throw fastify.httpErrors.createError(400, 'This id does not correct');
       }
+
+      const deleteUserFromSubscribes = (users: UserEntity[]) => {
+        usersAll.forEach(async (el, i) => {
+          const subscribes = el.subscribedToUserIds;
+          const indexSubscribed = subscribes.findIndex(
+            (subscriber) => subscriber === id
+          );
+
+          if (indexSubscribed !== -1) {
+            el.subscribedToUserIds.splice(indexSubscribed, 1);
+            await this.db.users.change(el.id, el as Object);
+          }
+        });
+      };
+
+      const usersAll = await this.db.users.findMany();
+      deleteUserFromSubscribes(usersAll);
 
       const user = await this.db.users.delete(id);
       return user;

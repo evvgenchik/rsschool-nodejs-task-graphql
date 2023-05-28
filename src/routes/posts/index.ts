@@ -33,6 +33,19 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           'This profile does not exist!'
         );
       }
+
+      const author = await this.db.users.findOne({
+        key: 'id',
+        equals: post.userId,
+      });
+
+      if (!author) {
+        throw fastify.httpErrors.createError(
+          404,
+          'This profile does not exist!'
+        );
+      }
+
       return post;
     }
   );

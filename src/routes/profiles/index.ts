@@ -30,6 +30,19 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       if (!profile) {
         throw fastify.httpErrors.createError(404, 'This user does not exist!');
       }
+
+      const author = await this.db.users.findOne({
+        key: 'id',
+        equals: profile.userId,
+      });
+
+      if (!author) {
+        throw fastify.httpErrors.createError(
+          404,
+          'This profile does not exist!'
+        );
+      }
+
       return profile;
     }
   );
