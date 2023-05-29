@@ -1,16 +1,21 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { graphqlBodySchema } from './schema';
+import { memberType, userType, postType, profileType } from './graphqlTypes';
 import {
-  // GraphQLInputObjectType,
   GraphQLList,
   GraphQLID,
-  GraphQLString,
   GraphQLSchema,
   GraphQLObjectType,
   graphql,
-  GraphQLInt,
-  GraphQLNonNull,
 } from 'graphql';
+import {
+  createPost,
+  createProfileArgs,
+  updatePost,
+  updateProfileArgs,
+  userCreateArgs,
+  userUpdateArgs,
+} from './graphqlArgTypes';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -88,9 +93,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           createUser: {
             type: userType,
             args: {
-              firstName: { type: new GraphQLNonNull(GraphQLString) },
-              lastName: { type: new GraphQLNonNull(GraphQLString) },
-              email: { type: new GraphQLNonNull(GraphQLString) },
+              ...userCreateArgs,
             },
             async resolve(parent, args) {
               return await fastify.db.users.create(args);
@@ -99,10 +102,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           updateUser: {
             type: userType,
             args: {
-              id: { type: new GraphQLNonNull(GraphQLID) },
-              firstName: { type: new GraphQLNonNull(GraphQLString) },
-              lastName: { type: new GraphQLNonNull(GraphQLString) },
-              email: { type: new GraphQLNonNull(GraphQLString) },
+              ...userUpdateArgs,
             },
             async resolve(parent, args) {
               return await fastify.db.users.change(args.id, args);
@@ -111,14 +111,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           createProfile: {
             type: profileType,
             args: {
-              avatar: { type: GraphQLString },
-              sex: { type: GraphQLString },
-              birthday: { type: GraphQLString },
-              country: { type: GraphQLString },
-              street: { type: GraphQLString },
-              city: { type: GraphQLString },
-              memberTypeId: { type: GraphQLString },
-              userId: { type: GraphQLString },
+              ...createProfileArgs,
             },
             async resolve(parent, args) {
               return await fastify.db.profiles.create(args);
@@ -127,15 +120,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           updateProfiile: {
             type: profileType,
             args: {
-              id: { type: GraphQLID },
-              avatar: { type: GraphQLString },
-              sex: { type: GraphQLString },
-              birthday: { type: GraphQLString },
-              country: { type: GraphQLString },
-              street: { type: GraphQLString },
-              city: { type: GraphQLString },
-              memberTypeId: { type: GraphQLString },
-              userId: { type: GraphQLString },
+              ...updateProfileArgs,
             },
             async resolve(parent, args) {
               return await fastify.db.profiles.change(args.id, args);
@@ -144,9 +129,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           createPost: {
             type: postType,
             args: {
-              title: { type: GraphQLString },
-              content: { type: GraphQLString },
-              userId: { type: GraphQLString },
+              ...createPost,
             },
             async resolve(parent, args) {
               return await fastify.db.posts.create(args);
@@ -155,10 +138,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           updatePost: {
             type: postType,
             args: {
-              id: { type: GraphQLID },
-              title: { type: GraphQLString },
-              content: { type: GraphQLString },
-              userId: { type: GraphQLString },
+              ...updatePost,
             },
             async resolve(parent, args) {
               return await fastify.db.posts.change(args.id, args);
@@ -188,47 +168,5 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     }
   );
 };
-
-const userType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    id: { type: GraphQLID },
-    firstName: { type: GraphQLString },
-    lastName: { type: GraphQLString },
-    email: { type: GraphQLString },
-    subscribedToUserIds: { type: new GraphQLList(GraphQLString) },
-  }),
-});
-const postType = new GraphQLObjectType({
-  name: 'Post',
-  fields: () => ({
-    id: { type: GraphQLID },
-    title: { type: GraphQLString },
-    content: { type: GraphQLString },
-    userId: { type: GraphQLString },
-  }),
-});
-const profileType = new GraphQLObjectType({
-  name: 'Profile',
-  fields: () => ({
-    id: { type: GraphQLID },
-    avatar: { type: GraphQLString },
-    sex: { type: GraphQLString },
-    birthday: { type: GraphQLString },
-    country: { type: GraphQLString },
-    street: { type: GraphQLString },
-    city: { type: GraphQLString },
-    memberTypeId: { type: GraphQLString },
-    userId: { type: GraphQLString },
-  }),
-});
-const memberType = new GraphQLObjectType({
-  name: 'Member',
-  fields: () => ({
-    id: { type: GraphQLID },
-    discount: { type: GraphQLInt },
-    monthPostsLimit: { type: GraphQLInt },
-  }),
-});
 
 export default plugin;
