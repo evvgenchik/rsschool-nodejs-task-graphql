@@ -42,7 +42,7 @@ const profileType = new GraphQLObjectType({
 const memberType = new GraphQLObjectType({
   name: 'Member',
   fields: () => ({
-    id: { type: GraphQLID },
+    id: { type: GraphQLString },
     discount: { type: GraphQLInt },
     monthPostsLimit: { type: GraphQLInt },
   }),

@@ -6,9 +6,6 @@ const isValidUuid = (code: string) => {
 };
 const isValidMemberType = (type: string) => {
   return type === 'basic' || type === 'business';
-  // const validKeys = ['discount', 'monthPostsLimit'];
-  // const currentKeys = Object.keys(obj);
-  // return validKeys.every((el) => currentKeys.includes(el));
 };
 
 export { isValidUuid, isValidMemberType };

@@ -11,6 +11,12 @@ const userUpdateArgs = {
   lastName: { type: new GraphQLNonNull(GraphQLString) },
   email: { type: new GraphQLNonNull(GraphQLString) },
 };
+
+// const memberTypeArgs = {
+//   id: { type: GraphQLString },
+//   discount: { type: GraphQLInt },
+//   monthPostsLimit: { type: GraphQLInt },
+// };
 const createProfileArgs = {
   avatar: { type: GraphQLString },
   sex: { type: GraphQLString },
@@ -21,6 +27,7 @@ const createProfileArgs = {
   memberTypeId: { type: GraphQLString },
   userId: { type: GraphQLString },
 };
+
 const updateProfileArgs = {
   id: { type: GraphQLID },
   avatar: { type: GraphQLString },
