@@ -51,7 +51,6 @@ test('users', async (t) => {
     });
 
     const { body: receivedUser } = await getUser(app, user1.id);
-    console.log(receivedUser);
 
     t.ok(receivedUser.email === changedEmail);
   });
