@@ -1,6 +1,6 @@
 import { test } from 'tap';
 import { build } from '../helper';
-import { createUser, createPost, getPost } from '../utils/requests';
+import { getPost, createPost, createUser } from '../utils/requests';
 
 test('posts', async (t) => {
   const app = await build(t);

@@ -13,7 +13,10 @@ test('users', async (t) => {
   const app = await build(t);
 
   await t.test('GET /users/:id => failure; fake params.id', async (t) => {
-    const { res: resReceivedUser } = await getUser(app, 'fakeId');
+    const { res: resReceivedUser } = await getUser(
+      app,
+      'a24a6ea4-ce75-4665-a070-57453082c256'
+    );
 
     t.ok(resReceivedUser.statusCode === 404);
   });
